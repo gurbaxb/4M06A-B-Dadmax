@@ -11,13 +11,6 @@ def onDetach(self):
 
 def on_press(key):
     try:
-        # SHOULDER CONTORL
-        if key.char == 'q':
-            print ("Shoulder is moving inward")
-                
-
-
-        # ELBOW CONTROL
         # Check if 'd' is pressed for positive velocity
         if key.char == 'd':
             print("Positive Velocity")
