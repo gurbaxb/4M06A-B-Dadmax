@@ -7,7 +7,7 @@ def main():
 
 	stepper0.openWaitForAttachment(5000)
 
-	stepper0.setTargetPosition(-50000)
+	stepper0.setTargetPosition(50000)
 	stepper0.setEngaged(True)
 
 	try:

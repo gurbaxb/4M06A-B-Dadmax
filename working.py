@@ -14,14 +14,14 @@ def onDetach(self):
     print("Dadmax is not running!")
 
 # Initialize RoboClaw
-motor_com_port = 'COM24'  # Change to match the COM port RoboClaw is connected to
+motor_com_port = 'COM23'  # Change to match the COM port RoboClaw is connected to
 serial_obj = Serial(motor_com_port, 38400)  # Default baudrate for RoboClaw is 38400
-rc = Roboclaw(serial_obj, 0x80)  # Assuming address 0x80; adjust as needed
+rc = Roboclaw(serial_obj) 
 
 # Constants
-stepper_position = 50000
-shoulder_elbow_velocity_in = 0.25
-wrist_speed = 128
+stepper_position = 90000
+shoulder_elbow_velocity_in = 0.3
+wrist_speed = 64
 stop = 0
 
 def on_press(key):
@@ -48,13 +48,21 @@ def on_press(key):
         elif key.char == 'd':
             print("Elbow is moving outward")
             elbowMotor.setTargetVelocity(shoulder_elbow_velocity_in)
-        # WRIST CONTROL
-        elif key.char == 'r':
-            print("Wrist is moving inward")
-            rc.forward_m1(wrist_speed)  # Corrected with address
-        elif key.char == 'f':
-            print("Wrist is moving outward")
-            rc.backward_m1(wrist_speed)  # Corrected with address
+        elif key.char == 'x':
+            print("Elbow and shoulder is moving inward")
+            shoulderMotor.setTargetVelocity(shoulder_elbow_velocity_in)
+            elbowMotor.setTargetVelocity(-shoulder_elbow_velocity_in)
+        elif key.char == 'c':
+            print("Elbow and shoulder is moving outward")
+            shoulderMotor.setTargetVelocity(-shoulder_elbow_velocity_in)
+            elbowMotor.setTargetVelocity(shoulder_elbow_velocity_in)
+        # # WRIST CONTROL
+        # elif key.char == 'r':
+        #     print("Wrist is moving inward")
+        #     rc.forward_m1(wrist_speed)  
+        # elif key.char == 'f':
+        #     print("Wrist is moving outward")
+        #     rc.backward_m1(wrist_speed)  
     except AttributeError:
         pass
 
@@ -63,7 +71,7 @@ def on_release(key):
     # For BLDC motors, setting velocity to 0 is correct for stopping
     shoulderMotor.setTargetVelocity(stop)
     elbowMotor.setTargetVelocity(stop)
-    rc.forward_backward_m1(64)  # Assuming 64 is the stop command, adjust as needed with address
+    #rc.forward_backward_m1(0)  
     # Escape key to break the loop
     if key == Key.esc:
         return False
@@ -73,7 +81,7 @@ def main_motor():
 
     # Stepper motor initialization
     stepper = Stepper()
-    stepper.openWaitForAttachment(5000)
+    stepper.openWaitForAttachment(1000) 
     stepper.setEngaged(True)
 
     # Shoulder motor initialization
